@@ -13,7 +13,7 @@ class Encoder():
         self.kg = kg
 
     def fit(self, entities):
-        # Encode the literals
+        # Encoding literals
         print('Encoding Literals')
         queries = [
             f"""
@@ -43,11 +43,11 @@ class Encoder():
                 literals_embeddings[value] = self.fit_transform(tf.constant([value]))
 
                 if value in literals_relations:
-                    literals_relations[value].append(entities[i])
+                    literals_relations[value].add(entities[i])
                 else:
-                    literals_relations[value] = [entities[i]]
+                    literals_relations[value] = {entities[i]}
 
-        # Encode Nodes
+        # Encoding Nodes
         print('Encoding Nodes')
         queries = [
             f"""
