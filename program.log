@@ -1,111 +1,67 @@
-2023-08-22 10:27:24,899 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:21:07,778 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:24:03,613 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-22 11:24:03,645 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-22 11:24:17,485 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-22 11:24:17,510 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-22 11:26:30,987 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:30:21,447 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:31:38,724 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:50:11,776 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:58:31,604 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 11:59:32,001 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 12:04:48,085 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:23:00,289 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:25:59,038 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:30:14,728 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:31:10,657 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:32:28,169 - INFO - Message: ('Connection aborted.', TimeoutError(10060, 'Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu', None, 10060, None))
-2023-08-22 14:33:33,019 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:36:46,180 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:37:32,764 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:40:39,898 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:43:23,509 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 14:47:52,142 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:07:05,045 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:07:56,802 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:13:27,523 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:17:21,380 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:19:39,970 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:21:23,234 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-22 15:26:34,895 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 10:16:32,910 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 11:16:15,974 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 11:26:13,096 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 11:30:47,282 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 11:35:16,302 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-23 11:38:31,687 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 14:48:56,670 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:11:21,419 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:15:14,398 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:17:43,700 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:25:40,536 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:29:11,881 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:33:05,096 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:44:37,242 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-23 15:59:25,891 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 08:22:42,987 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 08:56:42,028 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 09:06:47,899 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 09:13:05,649 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 09:25:10,530 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 09:40:39,689 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 09:54:26,485 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 12:05:34,966 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 12:09:56,708 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-24 13:34:28,323 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:15:33,833 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:16:46,454 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:22:17,832 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:22:17,839 - INFO - Downloading TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
-2023-08-29 09:23:26,168 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:23:26,172 - INFO - Downloading TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
-2023-08-29 09:23:47,210 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 40.00MB
-2023-08-29 09:24:04,425 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 70.00MB
-2023-08-29 09:24:22,867 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 100.00MB
-2023-08-29 09:24:42,240 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 130.00MB
-2023-08-29 09:24:59,851 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 170.00MB
-2023-08-29 09:25:19,243 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 210.00MB
-2023-08-29 09:25:39,083 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 250.00MB
-2023-08-29 09:25:54,189 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 270.00MB
-2023-08-29 09:26:10,363 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 300.00MB
-2023-08-29 09:32:44,812 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-29 09:32:44,818 - INFO - Downloading TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
-2023-08-29 09:33:06,035 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 40.00MB
-2023-08-29 09:33:23,436 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 80.00MB
-2023-08-29 09:33:40,887 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 110.00MB
-2023-08-29 09:33:59,476 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 140.00MB
-2023-08-29 09:34:18,767 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 180.00MB
-2023-08-29 09:34:36,892 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 220.00MB
-2023-08-29 09:34:55,809 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 260.00MB
-2023-08-29 09:35:11,865 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 290.00MB
-2023-08-29 09:35:29,170 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 320.00MB
-2023-08-29 09:35:47,930 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 350.00MB
-2023-08-29 09:36:06,814 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 390.00MB
-2023-08-29 09:36:27,235 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 420.00MB
-2023-08-29 09:36:42,710 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 440.00MB
-2023-08-29 09:37:00,044 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 460.00MB
-2023-08-29 09:37:16,939 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 500.00MB
-2023-08-29 09:37:37,106 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 540.00MB
-2023-08-29 09:37:53,891 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 580.00MB
-2023-08-29 09:38:10,138 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 610.00MB
-2023-08-29 09:38:29,191 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 650.00MB
-2023-08-29 09:38:44,672 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 680.00MB
-2023-08-29 09:39:00,689 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 710.00MB
-2023-08-29 09:39:17,723 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 740.00MB
-2023-08-29 09:39:32,942 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 770.00MB
-2023-08-29 09:39:51,467 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 810.00MB
-2023-08-29 09:40:13,660 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 840.00MB
-2023-08-29 09:40:34,885 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 870.00MB
-2023-08-29 09:40:50,200 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 890.00MB
-2023-08-29 09:41:11,002 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 920.00MB
-2023-08-29 09:41:26,983 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 950.00MB
-2023-08-29 09:41:40,863 - INFO - Downloaded https://tfhub.dev/google/universal-sentence-encoder/4, Total size: 987.47MB
-2023-08-29 09:41:40,879 - INFO - Downloaded TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
-2023-08-30 08:43:00,740 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-08-30 08:43:31,724 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-08-30 08:43:31,759 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
-2023-09-04 09:32:14,726 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-09-04 10:17:35,766 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-09-04 10:25:56,856 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
-2023-09-04 10:33:39,920 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 10:33:08,705 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 10:33:08,728 - INFO - Downloading TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
+2023-11-22 10:33:25,904 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 77.84MB
+2023-11-22 10:33:42,951 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 167.84MB
+2023-11-22 10:33:58,019 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 247.84MB
+2023-11-22 10:34:13,487 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 327.84MB
+2023-11-22 10:34:28,975 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 407.84MB
+2023-11-22 10:34:44,167 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 477.84MB
+2023-11-22 10:35:00,372 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 547.84MB
+2023-11-22 10:35:15,965 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 617.84MB
+2023-11-22 10:35:31,594 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 687.84MB
+2023-11-22 10:35:48,707 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 757.84MB
+2023-11-22 10:36:05,599 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 827.84MB
+2023-11-22 10:36:21,556 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 897.84MB
+2023-11-22 10:36:36,825 - INFO - Downloading https://tfhub.dev/google/universal-sentence-encoder/4: 967.84MB
+2023-11-22 10:36:41,481 - INFO - Downloaded https://tfhub.dev/google/universal-sentence-encoder/4, Total size: 987.47MB
+2023-11-22 10:36:41,488 - INFO - Downloaded TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
+2023-11-22 11:14:17,766 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 11:24:03,208 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 11:30:17,668 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 11:35:41,752 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 11:35:41,771 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 11:36:18,801 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 11:36:18,822 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 13:25:16,259 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 13:39:29,415 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 13:44:11,923 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 13:44:13,957 - WARNING - Tensor._shape is private, use Tensor.shape instead. Tensor._shape will eventually be removed.
+2023-11-22 14:20:30,223 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 14:20:54,408 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-22 14:24:33,562 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 09:30:25,601 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 09:35:32,825 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 10:25:36,933 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 11:45:25,298 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 11:49:00,061 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1244_Deira%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000016D167ACA88>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 11:49:39,846 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/141st_Ohio_Infantry%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000227008D1548>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 11:53:55,861 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1917_Columbus_Panhandles_season%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000026E6C2F3108>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:05:50,462 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 12:28:01,632 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-23 12:38:40,148 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1950%E2%80%9351_Colchester_United_F.C._season__Johnny_McKim__1%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F76DADC248>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:42:49,747 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1970_Scottish_Cup_Final%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000021072856748>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:50:36,290 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1992_Kashima_Antlers_season__Carlos__1%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001DA7F18EB88>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:50:39,010 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1992_Macau_Grand_Prix__Madgwick_Motorsport__1%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002107284E788>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:53:40,342 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1995%E2%80%9396_Blackburn_Rovers_F.C._season__Michael_Holt__1%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000021072844948>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:56:55,000 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1997%E2%80%9398_Stockport_County_F.C._season__Jim_Gannon__1%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000210727DE448>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 12:57:33,488 - INFO - Message: HTTPConnectionPool(host='200.131.10.200', port=8890): Max retries exceeded with url: /sparql/query?query=%0A%20%20%20%20%20%20%20%20%20%20%20%20SELECT%20DISTINCT%20%2A%20WHERE%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Chttp%3A//dbpedia.org/resource/1998%E2%80%9399_2._Bundesliga%3E%20%3Fp%20%3Fo%20.%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20FILTER%28%21isLiteral%28%3Fo%29%20%20%7C%7C%20%28isLiteral%28%3Fo%29%20%26%26%20langMatches%28lang%28%3Fo%29%2C%20%22EN%22%29%29%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002692100EE08>: Failed to establish a new connection: [WinError 10060] Uma tentativa de conexão falhou porque o componente conectado não respondeu\r\ncorretamente após um período de tempo ou a conexão estabelecida falhou\r\nporque o host conectado não respondeu'))
+2023-11-23 14:09:15,921 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-24 10:26:16,746 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 12:05:12,843 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 13:40:01,539 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 13:54:49,472 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:08:41,497 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:10:26,409 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:34:03,076 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:35:42,470 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:39:07,497 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:44:40,642 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:44:55,867 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:45:36,304 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 14:46:24,884 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 15:42:09,552 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 15:42:54,563 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 15:47:52,746 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 18:32:38,361 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 18:33:15,810 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
+2023-11-27 18:33:47,266 - INFO - Using C:\Users\italo\AppData\Local\Temp\tfhub_modules to cache modules.
