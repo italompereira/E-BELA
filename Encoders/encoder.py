@@ -1,299 +1,279 @@
-import bz2
 import os
-import re
-from concurrent.futures import ProcessPoolExecutor
-import math
+#import logging
 import tensorflow as tf
 import tensorflow_hub as hub
-import pathlib
 import re
-import requests
-from joblib import Parallel, delayed
-import pickle
+import time
+from pyspark.sql.functions import *
+from pyspark.sql.types import StructType, StructField, StringType, ArrayType, FloatType
+from data import Data
+
+
+#from pyspark.storagelevel import StorageLevel
 
 class Encoder():
 
-    def __init__(self, kg):
+    def __init__(self, kg, data):
+        print("Downloading model")
         encoder = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
         self.embedding_model = encoder
         self.kg = kg
+        self.data = data
 
-    # def fit(self, entities):
-    #
-    #
-    #     queries = [
-    #         f"""
-    #         SELECT DISTINCT * WHERE
-    #         {{
-    #             <{entity}> ?p ?o .
-    #             FILTER(!isLiteral(?o)  || (isLiteral(?o) && langMatches(lang(?o), "EN")))
-    #         }}""" for entity in entities
-    #     ]
-    #
-    #     responses = []
-    #     # for query in queries:
-    #     #     r = self.kg.get_from_kg(query)
-    #     #     responses.append(r['results']['bindings'])
-    #
-    #     print('Querying the database')
-    #     batch_size = 1000
-    #     batch = 0
-    #     for i in range(0, len(queries), batch_size):
-    #         print("Retrieving data from entities: Lot {} of {}. Entities {} of {}.".format(batch, math.ceil(len(queries)/batch_size), i, len(queries)))
-    #
-    #         with ProcessPoolExecutor(max_workers=10) as executor:
-    #             for r in executor.map(self.kg.get_from_kg, queries[i:i + batch_size]):
-    #                 responses.append(r['results']['bindings'])
-    #
-    #
-    #
-    #     # with ProcessPoolExecutor(max_workers=5) as executor:
-    #     #     for r in executor.map(self.kg.get_from_kg, queries):
-    #     #         responses.append(r['results']['bindings'])
-    #     #responses = [response['results']['bindings'] for response in responses]
-    #
-    #     # Encoding literals
-    #     print('Encoding Literals')
-    #     embeddings = {}
-    #     relations = {}
-    #     for i in range(len(responses)):
-    #         # responses_entity = responses[i]
-    #         for response in responses[i]:
-    #             value = response['o']['value']
-    #             if len(value) < 2 or 'http://' in value: continue
-    #             value = re.sub(r'[^a-zA-Z0-9 ]+', '', value).strip()
-    #
-    #             embeddings[value] = self.fit_transform(tf.constant([value]))
-    #
-    #             if value in relations:
-    #                 relations[value].add(entities[i])
-    #             else:
-    #                 relations[value] = {entities[i]}
-    #
-    #     # Encoding Nodes
-    #     print('Encoding Nodes')
-    #     # queries = [
-    #     #     f"""
-    #     #     SELECT DISTINCT * WHERE
-    #     #     {{
-    #     #         <{entity}> ?p ?o .
-    #     #         FILTER(!isLiteral(?o)  || (isLiteral(?o) && langMatches(lang(?o), "EN")))
-    #     #     }}""" for entity in entities
-    #     # ]
-    #     #
-    #     # responses = []
-    #     # with ProcessPoolExecutor(max_workers=10) as executor:
-    #     #     for r in executor.map(self.kg.get_from_kg, queries):
-    #     #         responses.append(r['results']['bindings'])
-    #     # #responses = [response['results']['bindings'] for response in responses]
-    #
-    #     changed = True
-    #     count = 0
-    #     while changed and count < 3:
-    #         count += 1
-    #         changed = False
-    #         for i in range(len(responses)):
-    #             #responses_entity = responses[i]
-    #             related_embeddings = []
-    #
-    #             for response in responses[i]:
-    #                 value = response['o']['value']
-    #
-    #                 # the first iteration
-    #                 if count == 1:
-    #                     if len(value) < 2 or 'http://' in value: continue
-    #                     value = re.sub(r'[^a-zA-Z0-9 ]+', '', value).strip()
-    #
-    #                 # the other iterations
-    #                 elif 'http://' not in value:
-    #                     continue
-    #
-    #                 if value in embeddings:
-    #                     related_embeddings.append(embeddings[value])
-    #
-    #             if len(related_embeddings) > 0:
-    #
-    #                 # appends the embedding of entity to calculate the new representation
-    #                 if count > 1 and entities[i] in embeddings:
-    #                     related_embeddings.append(embeddings[entities[i]])
-    #
-    #                 mean = tf.reduce_mean(tf.stack(related_embeddings, axis=1), 1)
-    #                 if entities[i] not in embeddings or not tf.math.reduce_all(
-    #                         tf.equal(embeddings[entities[i]], mean)).numpy():
-    #                     changed = True
-    #                     embeddings[entities[i]] = tf.reduce_mean(tf.stack(related_embeddings, axis=1), 1)
-    #
-    #     return embeddings, relations
+    def embedding_literals(self, row, ):
+        print('teste')
 
-    def fit(self): #, entities):
+    def fit(self):
 
-        directory = './Temp/'
-        files = [f for f in os.listdir(directory) if f.endswith('.bz2')]
-        path_entities_literals_file = directory + "entities_literals_file.pkl"
-        path_literals_entities_file = directory + "literals_entities_file.pkl"
+        if not os.path.exists(Data.PATH_EMBEDDINGS + 'done.txt'):
+            schema_df_embeddings = self.data.schema_df_embeddings
 
-        entities_literals = {}
-        literals_entities = {}
+            # Store representations of literals, the first representation of entities and representations of entities
+            df_emb_literals = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
+            df_emb_entities_temp = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
+            df_emb_entities = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
 
-        if not os.path.isfile(path_entities_literals_file) or  not os.path.isfile(path_literals_entities_file):
-            for i in range(len(files)):
-                source_file = bz2.BZ2File('./Temp/' + files[i], "r")
+            batch = 0
+            batch_size = 2000
+            data_frame_size = 1000000
 
-                source_file.readline()  # It ignores the first line
-                next_line = source_file.readline()
+            ########## Encoding literals ##########
+            print('Encoding Literals')
+            start = time.time()
+            path_embedding_literals = Data.PATH_EMBEDDINGS_LITERALS
+            path_embedding_entities_temp = Data.PATH_EMBEDDINGS_ENTITIES_TEMP
+
+            if not os.path.exists(path_embedding_entities_temp):
+                if os.path.exists(path_embedding_literals):
+                    # Check if there are some literals not embedded
+                    print(f"Loading existing embeddings from {path_embedding_literals}")
+                    df_emb_literals_aux = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_literals).distinct()
+                    temp = self.data.df_literals.join(df_emb_literals_aux.select('s','o').withColumnRenamed("s","s_").withColumnRenamed("o","o_"), (col('o') == col('o_')) & (col('s') == col('s_')), 'left_anti')
+                else:
+                    temp = self.data.df_literals
+
+                index_row = 0
+                index_row_dataframe = 0
+                size = temp.count()
+                if size > 0:
+                    df_iterator = temp.sort('s').toLocalIterator()
+                    #Parallel(n_jobs=10)(delayed(print)(row.asDict()['s']) for row in df_iterator)
+                    ls_emb_aux = []
+                    for row in df_iterator:
+                        index_row += 1
+                        index_row_dataframe += 1
+
+                        # Gets the subject and object
+                        subject = (row.asDict())['s']
+                        object = (row.asDict())['o']
+
+                        # Preprocess the literal
+                        literal = re.sub('\r?@en .', '', object)
+                        literal = re.sub(r'[^a-zA-Z0-9 ]+', '', literal).strip() #remove special characters
+                        literal = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", literal) #CamelCase split
+
+                        if literal == '':
+                            continue
+
+                        embedding = self.get_embedding(tf.constant([literal])).numpy().tolist()[0]
+                        ls_emb_aux.append((subject, object, 'L', embedding))
+
+                        if batch == batch_size:
+                            batch = 0
+                            df_emb_literals = df_emb_literals.union(
+                                self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings))
+                            ls_emb_aux = []
+                            continue
+
+                        if index_row % 10000 == 0:
+                            print(f'Encoding Literals: {index_row} of {size}')
+                            end = time.time()
+                            print(end - start)
+
+                            if index_row_dataframe > data_frame_size:
+                                df_emb_literals.write.mode('append').json(path_embedding_literals)
+                                df_emb_literals = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
+                                index_row_dataframe = 0
+                        batch += 1
+                    if df_emb_literals.count() > 0:
+                        df_emb_literals.union(
+                            self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings)).write.mode('append').json(path_embedding_literals)
+
+                        #self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings).write.mode('append').json(path_embedding_literals)
+                    end = time.time()
+                    print(end - start)
+            df_emb_literals = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_literals)
+
+
+            ########## Gets the first representation of entities (average of literals) ##########
+            print('Gets the first representation of entities (average of literals)')
+            start = time.time()
+            path_embedding_entities = Data.PATH_EMBEDDINGS_ENTITIES
+            if not os.path.exists(path_embedding_entities):
+                if os.path.exists(path_embedding_entities_temp):
+                    print(f"Loading existing embeddings from {path_embedding_entities_temp}")
+                    df_emb_entities_temp_aux = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_entities_temp)
+                    temp = df_emb_literals.join(df_emb_entities_temp_aux.select('s').withColumnRenamed("s","s_"), (col('s') == col('s_')), 'left_anti')
+
+
+                else: #if not os.path.exists(path_embedding_entities_temp):
+                    temp = df_emb_literals
+
+                index_row = 0
+                index_row_dataframe = 0
+                size = temp.count()
+                if size > 0:
+                    df_iterator = temp.sort('s').toLocalIterator()
+                    ls_emb_aux = []
+                    tensors = []
+                    current_row = next(iter(df_iterator))
+                    while True:
+                        index_row += 1
+                        index_row_dataframe += 1
+                        try:
+                            next_row = next(iter(df_iterator))
+                        except:
+                            tensors.append(tf.constant(current_row.asDict()['embedding']))
+                            new_embedding = tf.reduce_mean(tf.stack(tensors, axis=1), 1)
+                            current_entity = current_row.asDict()['s']
+                            ls_emb_aux.append((current_entity, current_entity, 'E', new_embedding.numpy().tolist()))
+
+                            df_emb_entities_temp = df_emb_entities_temp.union(
+                                self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings))
+                            ls_emb_aux = []
+                            break
+
+                        current_entity = current_row.asDict()['s']
+                        next_entity = next_row.asDict()['s']
+
+                        tensors.append(tf.constant(current_row.asDict()['embedding']))
+
+                        current_row = next_row
+                        if current_entity == next_entity:
+                            continue
+                        else:
+                            new_embedding = tf.reduce_mean(tf.stack(tensors, axis=1), 1)
+                            ls_emb_aux.append((current_entity, current_entity, 'E', new_embedding.numpy().tolist()))
+                            tensors = []
+
+                        if len(ls_emb_aux) == batch_size:
+                            df_emb_entities_temp = df_emb_entities_temp.union(
+                                self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings))
+                            ls_emb_aux = []
+
+                        if index_row % 10000 == 0:
+                            print(f'Encoding Entities (Mean): {index_row} of {size}')
+                            end = time.time()
+                            print(end - start)
+
+                            if index_row_dataframe > data_frame_size:
+                                df_emb_entities_temp.write.mode('append').json(path_embedding_entities_temp)
+                                df_emb_entities_temp = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
+                                index_row_dataframe = 0
+
+                    if df_emb_entities_temp.count() > 0:
+                        df_emb_entities_temp.union(
+                            self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings)).write.mode('append').json(path_embedding_entities_temp)
+
+                    end = time.time()
+                    print(end - start)
+            df_emb_entities_temp = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_entities_temp)
+
+            ########## Encoding Entities ##########
+            print('Encoding Entities')
+            start = time.time()
+
+
+            # Retrieve the embeddings of the child entities of each entity
+            df_temp = (
+                (
+                    (
+                        df_emb_entities_temp
+                        .select('s')
+                        .withColumnRenamed('s', 's_')
+                        .join(self.data.df_entities, col('s') == col('s_'))
+                        .select('s_', 'o')
+                        .withColumnRenamed("o", "o_")
+                    ).join(df_emb_entities_temp, col('o_') == col('s'))
+                ).select('s_', 'o_', 'embedding')
+                .union(df_emb_entities_temp.select('s', 'o', 'embedding'))
+                .sort('s_')
+            )
+
+            if os.path.exists(path_embedding_entities):
+                print(f"Loading existing embeddings from {path_embedding_entities}")
+                df_emb_entities_aux = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_entities)
+                temp = df_temp.join(df_emb_entities_aux.select('s', 'o'), (col('s') == col('s_')),'left_anti')
+
+            else: #if not os.path.exists(path_embedding_entities):
+                temp = df_temp
+
+            index_row = 0
+            index_row_dataframe = 0
+            size = temp.count()
+            if size > 0:
+                df_iterator = temp.toLocalIterator()
+                ls_emb_aux = []
+                tensors = []
+                current_row = next(iter(df_iterator))
+
                 while True:
-                    line = next_line
-                    next_line = source_file.readline()
-                    if len(next_line) == 0:  # This check if the current line is the last and ignore
+                    index_row += 1
+                    index_row_dataframe += 1
+                    try:
+                        next_row = next(iter(df_iterator))
+                    except:
+                        tensors.append(tf.constant(current_row.asDict()['embedding']))
+                        new_embedding = tf.reduce_mean(tf.stack(tensors, axis=1), 1)
+                        current_entity = current_row.asDict()['s_']
+                        ls_emb_aux.append((current_entity, current_entity, 'E', new_embedding.numpy().tolist()))
+
+                        df_emb_entities = df_emb_entities.union(
+                            self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings))
+                        ls_emb_aux = []
                         break
 
-                    try:
-                        txt = line.decode("utf-8")
-                    except:
-                        txt = line.decode("iso_8859_1")
-                    originalLine = txt
+                    current_entity = current_row.asDict()['s_']
+                    next_entity = next_row.asDict()['s_']
 
-                    #if '@' in txt:
-                    if not '@en' in txt:
+                    tensors.append(tf.constant(current_row.asDict()['embedding']))
+
+                    current_row = next_row
+                    if current_entity == next_entity:
                         continue
-
-                    txt = re.sub('\r?> <|> "', '|||', txt)
-                    txt = re.sub('\r?<', '', txt)
-                    txt = re.sub('\r?> .', '', txt)
-                    txt = re.sub('\r?\n', '', txt)
-                    parts_of_triple = txt.split('|||')
-
-                    if parts_of_triple[0] in entities_literals:
-                        entities_literals[parts_of_triple[0]].update({parts_of_triple[2][:-6]})
                     else:
-                        entities_literals[parts_of_triple[0]] = {parts_of_triple[2][:-6]}
+                        new_embedding = tf.reduce_mean(tf.stack(tensors, axis=1), 1)
+                        ls_emb_aux.append((current_entity, current_entity, 'E', new_embedding.numpy().tolist()))
+                        tensors = []
 
-                    if parts_of_triple[2][:-6] in literals_entities:
-                        literals_entities[parts_of_triple[2][:-6]].update({parts_of_triple[0]})
-                    else:
-                        literals_entities[parts_of_triple[2][:-6]] = {parts_of_triple[0]}
+                    if len(ls_emb_aux) == batch_size:
+                        df_emb_entities = df_emb_entities.union(
+                            self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings))
+                        ls_emb_aux = []
+                    if index_row % 10000 == 0:
+                        print(f'Encoding Entities (Mean): {index_row} of {size}')
+                        end = time.time()
+                        print(end - start)
 
-            entities_literals_file = open(path_entities_literals_file, 'wb')
-            pickle.dump(entities_literals, entities_literals_file)
-            entities_literals_file.close()
+                        if index_row_dataframe > data_frame_size:
+                            df_emb_entities.write.mode('append').json(path_embedding_entities)
+                            df_emb_entities = self.data.sparkSession.createDataFrame([], schema_df_embeddings)
+                            index_row_dataframe = 0
 
-            literals_entities_file = open(path_literals_entities_file, 'wb')
-            pickle.dump(literals_entities, literals_entities_file)
-            literals_entities_file.close()
+                end = time.time()
+                print(end - start)
+                if df_emb_entities.count() > 0:
+                    df_emb_entities.union(
+                        self.data.sparkSession.createDataFrame(ls_emb_aux, schema_df_embeddings)).write.mode('append').json(path_embedding_entities)
 
-        else:
-            entities_literals_file = open(path_entities_literals_file, 'wb')
-            entities_literals = pickle.load(entities_literals_file)
-            entities_literals_file.close()
+            with open(Data.PATH_EMBEDDINGS + 'done.txt', 'w') as f:
+                f.write('All entities and literals embedded!')
+        #df_emb_entities = self.data.sparkSession.read.schema(schema_df_embeddings).json(path_embedding_entities)
+        #print(df_emb_literals.union(df_emb_entities).count())
 
-            literals_entities_file = open(path_literals_entities_file, 'wb')
-            literals_entities = pickle.load(literals_entities_file)
-            literals_entities_file.close()
 
-        return
-        # queries = [
-        #     f"""
-        #      SELECT DISTINCT * WHERE
-        #      {{
-        #          <{entity}> ?p ?o .
-        #          FILTER(!isLiteral(?o)  || (isLiteral(?o) && langMatches(lang(?o), "EN")))
-        #      }}""" for entity in entities
-        # ]
-        #
-        responses = []
-        #
-        # print('Querying the database')
-        # batch_size = 1000
-        # batch = 0
-        # for i in range(0, len(queries), batch_size):
-        #     print("Retrieving data from entities: Lot {} of {}. Entities {} of {}.".format(batch, math.ceil(
-        #         len(queries) / batch_size), i, len(queries)))
-        #
-        #     with ProcessPoolExecutor(max_workers=10) as executor:
-        #         for r in executor.map(self.kg.get_from_kg, queries[i:i + batch_size]):
-        #             responses.append(r['results']['bindings'])
+        print('All entities and literals embedded!')
 
-        # Encoding literals
-        print('Encoding Literals')
-        embeddings = {}
-        relations = {}
-        for i in range(len(responses)):
-            # responses_entity = responses[i]
-            for response in responses[i]:
-                value = response['o']['value']
-                if len(value) < 2 or 'http://' in value: continue
-                value = re.sub(r'[^a-zA-Z0-9 ]+', '', value).strip()
+    def get_embedding(self, sentences):
+        return self.embedding_model(sentences)
 
-                embeddings[value] = self.fit_transform(tf.constant([value]))
-
-                if value in relations:
-                    relations[value].add(entities[i])
-                else:
-                    relations[value] = {entities[i]}
-
-        # Encoding Nodes
-        print('Encoding Nodes')
-
-        changed = True
-        count = 0
-        while changed and count < 3:
-            count += 1
-            changed = False
-            for i in range(len(responses)):
-                # responses_entity = responses[i]
-                related_embeddings = []
-
-                for response in responses[i]:
-                    value = response['o']['value']
-
-                    # the first iteration
-                    if count == 1:
-                        if len(value) < 2 or 'http://' in value: continue
-                        value = re.sub(r'[^a-zA-Z0-9 ]+', '', value).strip()
-
-                    # the other iterations
-                    elif 'http://' not in value:
-                        continue
-
-                    if value in embeddings:
-                        related_embeddings.append(embeddings[value])
-
-                if len(related_embeddings) > 0:
-
-                    # appends the embedding of entity to calculate the new representation
-                    if count > 1 and entities[i] in embeddings:
-                        related_embeddings.append(embeddings[entities[i]])
-
-                    mean = tf.reduce_mean(tf.stack(related_embeddings, axis=1), 1)
-                    if entities[i] not in embeddings or not tf.math.reduce_all(
-                            tf.equal(embeddings[entities[i]], mean)).numpy():
-                        changed = True
-                        embeddings[entities[i]] = tf.reduce_mean(tf.stack(related_embeddings, axis=1), 1)
-
-        return embeddings, relations
-
-    def fit_transform(self, sentences):
-        return self.embedding_model(tf.constant(sentences))
-
-    def get_file(remote_file, path_dir):  # , entities, relations):
-        try:
-            f = open(path_dir + remote_file.split('/')[-1] + ".ttl", "x", encoding="utf-8")
-        except:
-            print("File " + remote_file.split('/')[-1] + " parsed.")
-            return
-
-        if '#' in remote_file:
-            return
-        print("Downloading file " + remote_file)
-        local_file = path_dir + remote_file.split('/')[-1]
-        if os.path.isfile(local_file):
-            print('File exists')
-        else:
-            data = requests.get(remote_file)
-            with open(local_file, 'wb')as file:
-                try:
-                    file.write(data.content)
-                except:
-                    print("fail")
-
-        f.close()
