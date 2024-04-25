@@ -1,9 +1,0 @@
-#https://downloads.dbpedia.org/2016-10/core/article_categories_en.ttl.bz2
-#https://downloads.dbpedia.org/2016-10/core/category_labels_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/infobox_properties_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/instance_types_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/labels_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/long_abstracts_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/mappingbased_literals_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/mappingbased_objects_en.ttl.bz2
-https://downloads.dbpedia.org/2016-10/core/persondata_en.ttl.bz2

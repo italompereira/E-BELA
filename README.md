@@ -1,2 +1,0 @@
-# pyRDF2VEC
- 
