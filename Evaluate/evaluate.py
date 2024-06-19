@@ -6,6 +6,7 @@ import os
 import json
 import time
 import re
+import random
 
 import tensorflow as tf
 #from pyspark.sql import functions as F
@@ -15,7 +16,7 @@ from pyspark.sql.functions import *
 from sklearn.neighbors import KDTree
 
 from Encoders.encoder import Encoder
-from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import spacy
 
 from Encoders.encoder_sentence_transformer import EncoderTransformer
@@ -27,12 +28,29 @@ class Evaluate:
     ONLY_URIS = 0
     ONLY_LITERALS = 1
     ALL = 2
+    SEED = 448
 
-    def __init__(self, spark_data, data_base):
-        self.ground_truth = self.load_lcquad_grounth_truth()
-        self.ground_truth_ = self.load_conll_grounth_truth()
-        self.dataBase = data_base
+    PATHS = {
+        'lcquad': './Datasets/LC-QuADAnnotated/FullyAnnotated_LCQuAD5000.json',
+        'aida': './Datasets/Conll/aida-yago2-dataset/aida-yago2-dataset/AIDA-YAGO2-dataset.tsv',
+        'aidab': './Datasets/Conll/aida-yago2-dataset/aida-yago2-dataset/aida_testB.tsv',
+        'ace2004': './Datasets/ed_data/entity_disambiguation/ace2004.conll',
+        'aquaint': './Datasets/ed_data/entity_disambiguation/aquaint.conll',
+        'msnbc': './Datasets/ed_data/entity_disambiguation/msnbc.conll',
+    }
+
+    def __init__(self, spark_data, encoder, data_base, context_with_mention_avg, dataset, config_experiment):
         self.spark_data = spark_data
+        self.encoder = encoder
+        self.dataBase = data_base
+        self.context_with_mention_avg = context_with_mention_avg
+        self.config_experiment = config_experiment
+        self.dataset = dataset
+
+        if self.dataset == 'lcquad':
+            self.ground_truth = self.load_lcquad_grounth_truth(Evaluate.PATHS[self.dataset])
+        else:
+            self.ground_truth = self.load_conll_grounth_truth(Evaluate.PATHS[self.dataset])
 
     def __call__(self, *args, **kwargs):
         print('Evaluating embeddings.')
@@ -65,16 +83,26 @@ class Evaluate:
     def preprocess_literal(self, object):
         # Preprocess the literal
         literal = re.sub('\r?@en .', '', object)
-        literal = re.sub(r'[^a-zA-Z0-9()\'\".,:<>?!@$%&|\s]+', '', literal).strip('[" ]')  # remove special characters
+        literal = re.sub(r'[^a-zA-Z0-9()\'\"-.,:<>?!@$%&|\s]+', '', literal).strip('[" ]')  # remove special characters
         # literal = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", literal)  # CamelCase split
         return literal
 
-    def evaluate(self, ):
+    def evaluate(self):
+
+
         #transformer = EncoderUSE(self.spark_data)
-        transformer = EncoderTransformer(self.spark_data)
-        ground_truth = self.ground_truth
+        transformer = self.encoder.transformer #EncoderTransformer(self.spark_data, model="ST", weighted=False, strategy="AVG", top_n=2, top_n_way='GROUPED', config_experiment='')
+        if type(self.ground_truth) is tuple:
+            ground_truth = self.ground_truth[0]
+            documents = self.ground_truth[1]
+        else:
+            ground_truth = self.ground_truth
+            documents = None
+
         entities_mapping = [(item['label'], item['uri'], i) for i in range(len(ground_truth)) for item in ground_truth[i]['entity mapping']]
-        #predicates_mapping = [(item['label'], item['uri'], i) for i in range(len(ground_truth)) for item in ground_truth[i]['predicate mapping'] if 'label' in item]
+        random.seed(Evaluate.SEED)
+        random.shuffle(entities_mapping)
+        #entities_mapping = [(item['label'], item['uri'], i) for i in range(len(ground_truth)) for item in ground_truth[i]['predicate mapping'] if 'label' in item]
 
         print("Embedding " + str(len(entities_mapping)) + " entities from Ground Truth.")
 
@@ -84,53 +112,118 @@ class Evaluate:
         i = 0
         indexes_not_in_database = []
         file_number = 0
-        while os.path.exists(f'errors_{file_number}.txt'):
+        while os.path.exists(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt'):
             file_number += 1
-        file = open(f'errors_{file_number}.txt', 'w', encoding='utf-8')
-        experiment = 'Sentence Transformer (all-mpnet-base-v2).'
-        experiment += '\nGetting candidates with cosine.'
-        experiment += '\nDisambiguating with context without mention using euclidian distance.'
-        experiment += '\nEntities averaged, Literals not weighted.'
+        error_file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+        error_file.write(f'{self.encoder.config_experiment}\n')
 
-        file.write(f'{experiment}\n')
+        result_file = open(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+        result_file.write(f'{self.config_experiment}\n')
 
+        disambiguation_file = open(f'./EvaluateLogs/disambiguation_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+        disambiguation_file.write(f'{self.config_experiment}\n')
+
+        log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+        log_file.write(f'{self.config_experiment}\n')
+        log_file.write(f'Index|y_true|y_pred|Status\n')
 
         nlp = spacy.load("en_core_web_sm")
         last_mention = ''
-        while i < len(vectors):
-            print(str(i) + " vectors processed of " + str(len(vectors)))  # , end=".\t")
+        if hasattr(self.encoder.transformer.embedding_model, 'max_seq_length'):
+            max_seq_length = self.encoder.transformer.embedding_model.max_seq_length
+        else:
+            max_seq_length = None
+        sample_size = 364
+        number_instance_sample = 0
+        while number_instance_sample < len(vectors[:sample_size]):
+            print(str(i) + " vectors processed of " + str(sample_size))  # , end=".\t")
             try:
                 mention = entities_mapping[i][0]
                 y_true = entities_mapping[i][1]
                 doc = nlp(ground_truth[entities_mapping[i][2]]['question'])
-                mention_doc = nlp(mention)
-                context = self.get_mention_context(mention_doc, 15, doc)
-                context = self.preprocess_literal(ground_truth[entities_mapping[i][2]]['question']) #self.get_mention_context(mention_doc, 15, doc)
-                #context = re.sub(r"[?!]$", ".", context)
-                #context = context.replace(mention, '')
-                context_vector = transformer.get_embedding([context])[0]
-                #context_vector = tf.reduce_mean(tf.stack([vectors[i], context_vector], axis=1), 1)
+                #mention_doc = nlp(mention)
+                #context = self.get_mention_context(mention_doc, 15, doc)
+                if documents is not None:
+                    document = self.preprocess_literal(documents[ground_truth[entities_mapping[i][2]]['document_key']])
+                    ls_literals = []
+                    if max_seq_length is not None and len(document) > max_seq_length:
+                        text_sents = ''
+                        for sent in [str(sent) for sent in nlp(document).sents]:
+                            # if len(text_sents + sent) <= max_seq_length or text_sents == '':
+                            #     text_sents += sent + ' '
+                            #     continue
+                            # ls_literals.append(text_sents)
+                            # text_sents = sent
+                            if len(str(sent)) < 3 or str.lower(mention) not in str.lower(sent):
+                                continue
+                            ls_literals.append(sent)
+
+                        # if text_sents != '':
+                        #     ls_literals.append(text_sents)
+                    else:
+                        ls_literals.append(document)
+                    context = ls_literals
+                else:
+                    context = [self.preprocess_literal(ground_truth[entities_mapping[i][2]]['question'])] #self.get_mention_context(mention_doc, 15, doc)
+
+                #context_vector = tf.reduce_mean(tf.stack(transformer.get_embedding(context).tolist(), axis=1), 1).numpy().tolist()
+                context_vector = transformer.get_embedding(context).tolist()
+
+                if self.context_with_mention_avg:
+                    context_vector = tf.reduce_mean(tf.stack([vectors[i]] + context_vector, axis=1), 1)
 
                 if mention != last_mention:
-                    candidates = self.dataBase.get_top_k(vectors[i], y_true, 50)
+                    candidates = self.dataBase.get_top_k(vectors[i], y_true, 100)
+                    time.sleep(5)
                 last_mention = mention
-                if len(candidates) == 0:
+                if candidates is None or len(candidates) == 0:
                     print('')
                     print(f'The entity {entities_mapping[i][1]} is not present at database.')
+                    log_file.write(f'Index:{i}|{y_true}|Empty|Not present at database\n')
+
                     indexes_not_in_database.append(i)
                     i += 1
+                    last_mention = ''
                     continue
 
-                candidates_embedding = tf.constant([[float(x) for x in candidate[2].strip('][').split(',')] for candidate in candidates])
+                candidates_embedding = tf.constant([[float(x) for x in candidate[3].strip('][').split(',')] for candidate in candidates])
                 distance = self.calc_distance(context_vector, candidates_embedding, axis=1)
                 indexes = tf.math.top_k(tf.negative(distance), k=len(candidates))[1].numpy()
 
-                Y_pred.append(candidates[indexes[0]][0])
-                #Y_pred.append(self.get_similars_to(candidates, 10))
+                repeated_distances = []
+                for indexes_i in range(len(indexes)):
+                    actual_distance = distance[indexes[indexes_i]].numpy()
+                    if actual_distance == distance[indexes[indexes_i+1]].numpy():
+                        if candidates[indexes[indexes_i]][2] == 'E':
+                            repeated_distances.append(candidates[indexes[indexes_i]])
+                        continue
+                    break
 
+                if len(repeated_distances) > 0:
+                    Y_pred.append(candidates[indexes[0]][0])
+                else:
+                    Y_pred.append(candidates[indexes[0]][0])
+                #Y_pred.append(self.get_similars_to(candidates, 10))
                 # print if y_pred different to y_true
 
                 if str.lower(Y_pred[-1]) != str.lower(y_true):
+                    df_disambiguation = self.spark_data.df_disambiguation.filter(col('s') == y_true).select('o').withColumnRenamed("o", "entity")
+                    df_disambiguation = df_disambiguation.union(self.spark_data.df_disambiguation.filter(col('o') == y_true).select('s'))
+                    df_disambiguation_aux = df_disambiguation.union(
+                        self.spark_data.df_disambiguation.filter(lower(col('s')).isin([str.lower(row.asDict()['entity']) for row in df_disambiguation.collect()]))
+                        .select('o'))
+                    df_disambiguation_aux = df_disambiguation_aux.union(
+                        self.spark_data.df_disambiguation.filter(lower(col('o')).isin([str.lower(row.asDict()['entity']) for row in df_disambiguation.collect()]))
+                        .select('s'))
+                    rows = [str.lower(row.asDict()['entity']) for row in df_disambiguation_aux.collect()]
+                    if str.lower(Y_pred[-1]) in rows:
+                        log_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Disambiguated\n')
+                        disambiguation_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Disambiguated\n')
+                        Y_pred[-1] = y_true
+                        i += 1
+                        number_instance_sample += 1
+                        continue
+
                     message = (f'\n\ni: {i}')
                     message += (f'\nMention: {mention}')
                     message += (f'\nContext: {context}')
@@ -139,28 +232,64 @@ class Evaluate:
                     print(message)
                     message += ("\nCandidates:\n" + "\n".join(str(line) for line in [(candidates[index][0], candidates[index][1], distance[index]) for index in indexes[:25]]))
 
-                    file.write(message)
+                    error_file.write(message)
+                    log_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Error\n')
+                    i += 1
+                    number_instance_sample += 1
+                    continue
             except Exception as ex:
                 print(f'i: {i}. Exception: {ex}')
+                i += 1
+                number_instance_sample += 1
                 time.sleep(5)
                 continue
 
-            # if i % 100 == 0:
-            #     print("\n")
+            log_file.write(f'Index:{i}| y_true: {y_true}, y_pred: {Y_pred[-1]}\n')
             i += 1
-        file.close()
-        Y_pred = list(map(str.lower, Y_pred))
-        Y_true = list(map(str.lower,[item['uri'] for i in range(len(ground_truth)) for item in ground_truth[i]['entity mapping']]))
-        for index_not_in_database in sorted(indexes_not_in_database, reverse = True):
+            number_instance_sample += 1
+
+        # # Write the result of evaluation
+        # file_number = 0
+        # while os.path.exists(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt'):
+        #     file_number += 1
+        # results_file = open(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+        # results_file.write(f'{self.config_experiment}\n')
+
+        Y_pred_ = list(map(str.lower, Y_pred))[:i]
+        #Y_true = list(map(str.lower, [item['uri'] for i in range(len(ground_truth)) for item in ground_truth[i]['entity mapping']]))
+        Y_true = [str.lower(i[1]) for i in entities_mapping]
+        for index_not_in_database in sorted(indexes_not_in_database, reverse=True):
             del Y_true[index_not_in_database]
+        Y_true = Y_true[:len(Y_pred_)]
 
-        print('Precision: ')
-        print(f"Macro precision: {precision_score(Y_true, Y_pred, average='macro')}")
-        print(f"Micro precision:  {precision_score(Y_true, Y_pred, average='micro')}")
+        result = f'Evaluate {i} instances.\n\n'
 
-        print('Recall: ')
-        print(f"Macro recall:  {recall_score(Y_true, Y_pred, average='macro')}")
-        print(f"Micro recall:  {recall_score(Y_true, Y_pred, average='micro')}")
+        result += 'Accuracy: \n'
+        result += f"Accuracy: {accuracy_score(Y_true, Y_pred_)}\n"
+
+        result += 'Precision: \n'
+        result += f"Macro precision: {precision_score(Y_true, Y_pred_, average='macro')}\n"
+        result += f"Micro precision:  {precision_score(Y_true, Y_pred_, average='micro')}\n"
+
+        result += 'Recall: \n'
+        result += f"Macro recall: {recall_score(Y_true, Y_pred_, average='macro')}\n"
+        result += f"Micro recall:  {recall_score(Y_true, Y_pred_, average='micro')}\n"
+
+        result += 'F1: \n'
+        result += f"Macro F1: {f1_score(Y_true, Y_pred_, average='macro')}\n"
+        result += f"Micro F1:  {f1_score(Y_true, Y_pred_, average='micro')}\n"
+
+        result += f'Entities not present in database: {len(indexes_not_in_database)}\n'
+        for index in indexes_not_in_database:
+            result += f"{entities_mapping[index][0]} - {entities_mapping[index][1]} \n"
+        result_file.write(result)
+
+        error_file.close()
+        result_file.close()
+        disambiguation_file.close()
+        log_file.close()
+
+
 
         #print(sum(1 for x, y in zip(y_true, y_pred) if x == y) / len(y_true))
 
@@ -372,67 +501,61 @@ class Evaluate:
 
 
 
-    def load_lcquad_grounth_truth(self):
-        path_dataset = './Datasets/LC-QuADAnnotated/FullyAnnotated_LCQuAD5000.json'
+    def load_lcquad_grounth_truth(self, path_dataset):
+        #path_dataset = './Datasets/LC-QuADAnnotated/FullyAnnotated_LCQuAD5000.json'
 
         with open(path_dataset, encoding='utf8') as data_file:
             dataset = json.load(data_file)
 
         return [{'question':item['question'], 'entity mapping':item['entity mapping'], 'predicate mapping':item['predicate mapping']} for item in dataset]
 
+    def load_conll_grounth_truth(self, path_dataset):
+        # question = ''
         # entity_mapping = {}
         # predicate_mapping = {}
-        # questions = []
-        # for text in dataset:
-        #     for mapping in text['entity mapping']:
-        #         entity_mapping[mapping['label']] = mapping['uri']
-        #
-        #     for mapping in text['predicate mapping']:
-        #         if 'label' in mapping:
-        #             predicate_mapping[mapping['label']] = mapping['uri']
-        #
-        #     questions.append(
-        #         {
-        #             'question':text['question'],
-        #             'entity mapping':entity_mapping,
-        #             'predicate mapping':predicate_mapping
-        #         }
-        #     )
-        #     entity_mapping = {}
-        #     predicate_mapping = {}
-        #
-        # return questions
 
-    def load_conll_grounth_truth(self):
-        question = ''
-        entity_mapping = {}
-        predicate_mapping = {}
-
-        path_dataset = './Datasets/Conll/aida-yago2-dataset/aida-yago2-dataset/AIDA-YAGO2-dataset.tsv'
+        #path_dataset = './Datasets/Conll/aida-yago2-dataset/aida-yago2-dataset/AIDA-YAGO2-dataset.tsv'
 
         with open(path_dataset, encoding='utf8') as data_file:
             dataset = data_file.read()
 
         questions = []
         documents = dataset.split('-DOCSTART-')[1:]
+
+        documents_dict = {}
+
         for document in documents:
-            lines = document.split('\n')[1:]
+            lines = document.split('\n')
+            document_key = lines[0]
+            document_sentences = ''
+
+            questions_lines = lines[1:]
+
             question = ''
             entity_mapping = []
             predicate_mapping = []
-            for line in lines:
+            for line in questions_lines:
                 if line != '':
                     split_line = line.split('\t')
                     question += split_line[0] + ' '
-                    if "http://en.wikipedia.org/wiki/" in line:
+                    document_sentences += split_line[0] + ' '
+
+                    if any(re.findall(r'http://en.wikipedia.org/wiki/|en.wikipedia.org/wiki/',line)):
+                        if 'http://' not in line:
+                            split_line[4] = 'http://' + split_line[4]
+
+                    #if "http://en.wikipedia.org/wiki/" in line:
                         try:
                             entity_mapping.append({'label':split_line[2], 'uri': split_line[4].replace('en.wikipedia.org/wiki','dbpedia.org/resource')})
                         except:
                             print(split_line)
                 else:
-                    questions.append({'question': question, 'entity mapping': entity_mapping, 'predicate mapping': predicate_mapping})
+                    entity_mapping = list({v['label']: v for v in entity_mapping}.values())
+                    questions.append({'question': question, 'entity mapping': entity_mapping, 'predicate mapping': predicate_mapping, 'document_key': document_key})
                     question = ''
                     entity_mapping = []
                     predicate_mapping = []
 
-        return questions
+            documents_dict[document_key] = document_sentences
+
+        return (questions, documents_dict)

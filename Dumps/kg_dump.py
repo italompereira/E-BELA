@@ -12,14 +12,21 @@ class KGDump:
 
     def convert_to_cvs(self, path_file, f):  # , entities, relations):
         file = path_file
-        source_file = bz2.BZ2File(file, "r")
+        extension_file = os.path.splitext(path_file)[1]
+        if extension_file == '.bz2':
+            source_file = bz2.BZ2File(file, "r")
+
+            # Ignore the first line
+            source_file.readline()
+        elif extension_file == '.nt':
+            source_file = open(file, "rb")
 
         # entities = set(entities + relations)
 
         countMatches = 0
         countLines = 0
 
-        source_file.readline()
+
         nextLine = '<s> <p> <o> .'.encode("utf-8")
         while (True):
             line = nextLine
@@ -116,9 +123,12 @@ class KGDump:
                     print("fail")
         print("Parsing file " + local_file)
 
-        try:
-            f = open(SparkData.PATH_DUMP + remote_file.split('/')[-1] + ".csv", "x", encoding="utf-8")
-        except:
+        if not os.path.exists(SparkData.PATH_DUMP + remote_file.split('/')[-1] + ".csv.bz2"):
+        #try:
+            #f = open(SparkData.PATH_DUMP + remote_file.split('/')[-1] + ".csv", "x", encoding="utf-8")
+            f = bz2.open(SparkData.PATH_DUMP + remote_file.split('/')[-1] + ".csv.bz2", "wt", encoding="utf-8")
+        #except  Exception as e:
+        else:
             print("File " + remote_file.split('/')[-1] + " parsed.")
             return
 
@@ -130,7 +140,6 @@ class KGDump:
     def __call__(self, *args, **kwargs):
         print('Parsing files started ... ')
         lines = pathlib.Path("./Dumps/dbpedia_files.txt").read_text().splitlines()
-        #self.get_file(lines[4])  # , entities, relations)
         Parallel(n_jobs=10)(delayed(self.get_file)(remote_file) for remote_file in lines if '#' not in remote_file)
 
 

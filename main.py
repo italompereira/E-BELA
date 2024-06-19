@@ -1,8 +1,6 @@
 import platform
 import os
 
-from Database.database_operation import DataBase
-
 if platform.system() == 'Windows':
     print('Windows')
     # Environment variables used for Spark
@@ -29,31 +27,39 @@ else:
 #Disable GPU
 #os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-
-from Dumps.kg_dump import KGDump
 from Dumps.spark_data import SparkData
-from Evaluate.evaluate import Evaluate
+from Dumps.kg_dump import KGDump
 from Encoders.encoder import Encoder
+from Database.database_operation import DataBase
+from Evaluate.evaluate import Evaluate
 
-import cProfile, pstats, io
+def run_encoder(spark_data, model, weighted, strategy, top_n, top_n_way):
 
-# port 5432 postgres
-# def profile(fnc):
-#     """A decorator that uses cProfile to profile a function"""
-#
-#     def inner(*args, **kwargs):
-#         pr = cProfile.Profile()
-#         pr.enable()
-#         retval = fnc(*args, **kwargs)
-#         pr.disable()
-#         s = io.StringIO()
-#         sortby = 'cumulative'
-#         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-#         ps.print_stats()
-#         print(s.getvalue())
-#         return retval
-#
-#     return inner
+    config_experiment = model + '_' + \
+                        ('WGT' if weighted else 'NotWGT') + '_' + \
+                        strategy + '_' + \
+                        ('TopNone' if top_n is None else (f'Top{top_n}Grouped' if top_n_way == 'GROUPED' else f'Top{top_n}Simple'))
+    print(f'Encoding: {config_experiment}')
+    encoder_ = Encoder(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n, top_n_way=top_n_way, config_experiment=config_experiment)
+    encoder_()
+
+    data_base_ = DataBase(spark_data, model=model, weighted=weighted, top_n=top_n, top_n_way=top_n_way, config_experiment=config_experiment)
+    data_base_.save()
+
+
+
+def run_evaluate(spark_data, model, weighted, strategy, top_n, top_n_way, context_with_mention_avg, dataset):
+    config_experiment = model + '_' + \
+                        ('WGT' if weighted else 'NotWGT') + '_' + \
+                        strategy + '_' + \
+                        ('TopNone' if top_n is None else (f'Top{top_n}Grouped' if top_n_way == 'GROUPED' else f'Top{top_n}Simple')) + \
+                        ('_ContWithMention' if context_with_mention_avg else '_ContWithoutMention') + '_' + \
+                        dataset
+
+    encoder_ = Encoder(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n, top_n_way=top_n_way, config_experiment=config_experiment)
+    data_base_ = DataBase(spark_data, model=model, weighted=weighted, top_n=top_n, top_n_way=top_n_way, config_experiment='_'.join(config_experiment.split('_')[:-2]))
+    evaluate_ = Evaluate(spark_data, encoder_, data_base_, context_with_mention_avg, dataset, config_experiment)
+    evaluate_()
 
 if __name__ == "__main__":
 
@@ -61,18 +67,63 @@ if __name__ == "__main__":
     #path_endpoint = "https://dbpedia.org/sparql" #"http://200.131.10.200:8890/sparql" #
 
     # Download dump from dbpedia and convert to cvs files
-    #KGDump()()
+    KGDump()()
 
     # Load spark session and load dataframes
     spark_data = SparkData()
 
-    # Get embeddings from data
-    Encoder(spark_data)()
+    tests_cases = {
+        'model': [
+            'ST',
+            'USE'
+        ],
+        'weighted': [
+            False,
+            True
+        ],
+        'strategy': [
+            'AVG',
+            #'CONCAT'
+        ],
+        'top_n': [
+            [(2, 'GROUPED')],#, (2, 'SIMPLE')],
+            None
+        ],
+        'context_with_mention_avg': [
+            True,
+            False
+        ],
+        'dataset': [
+            'lcquad',
+            #'aidab',
+            #'ace2004',
+            #'aquaint',
+            #'msnbc',
+        ],
+    }
 
-    # Save data on postgresql
-    data_base = DataBase(spark_data)
-    #data_base.save()
+    # Encoding
+    for model in tests_cases['model']:
+        for weighted in tests_cases['weighted']:
+            for strategy in tests_cases['strategy']:
+                for top_n in tests_cases['top_n']:
+                    if top_n is not None:
+                        for top_n_way in top_n:
+                            run_encoder(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n_way[0], top_n_way=top_n_way[1])
+                    else:
+                        run_encoder(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n, top_n_way=[])
 
-    # Evaluation
-    evaluate = Evaluate(spark_data, data_base)
-    evaluate()
+    # Evaluating
+    for model in tests_cases['model']:
+        for weighted in tests_cases['weighted']:
+            for strategy in tests_cases['strategy']:
+                for top_n in tests_cases['top_n']:
+                    for dataset in tests_cases['dataset']:
+                        for context_with_mention_avg in tests_cases['context_with_mention_avg']:
+                            if top_n is not None:
+                                for top_n_way in top_n:
+                                    run_evaluate(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n_way[0], top_n_way=top_n_way[1], context_with_mention_avg= context_with_mention_avg, dataset=dataset)
+                                    break
+                            else:
+                                run_evaluate(spark_data, model=model, weighted=weighted, strategy=strategy, top_n=top_n, top_n_way=[], context_with_mention_avg=context_with_mention_avg, dataset=dataset)
+                                break
