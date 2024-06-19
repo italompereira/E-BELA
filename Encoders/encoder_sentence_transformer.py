@@ -84,7 +84,6 @@ class EncoderTransformer():
             start = time.time()
 
             # Counts how many occurrences of a literal to weight it.
-            #self.spark_data.df_literals = self.spark_data.df_literals.limit(100) #TODO REMOVE THIS LINE AFTER TESTS
             df_literals = self.spark_data.df_literals.join(
                 self.spark_data.df_literals.groupBy(lower("o")).count().withColumnRenamed("lower(o)", "o_")
                 , (lower(col('o')) == lower(col('o_')))
