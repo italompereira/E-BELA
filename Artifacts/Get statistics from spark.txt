@@ -1,0 +1,191 @@
+
+# Recupera entidades cuja predição foi errada
+file_number = 0
+file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'r', encoding='utf-8')
+lines = file.readlines()
+indexes = [int(re.sub(r'[^0-9]+', '', line)) for line in lines if 'i:' in line]
+entities_mapping_errors =  [entities_mapping[index] for index in indexes]
+
+all_entities = [el[1] for el in entities_mapping]
+not_in_database = ["http://dbpedia.org/resource/Africa_'70_(band)", 
+"http://dbpedia.org/resource/Jacques_Van't_Hart", 
+"http://dbpedia.org/resource/Șerban_Țițeica", 
+"http://dbpedia.org/resource/Lesley-Anne_Knight", 
+"http://dbpedia.org/resource/Alan_Kusov__11",
+"http://dbpedia.org/resource/Harvey_Rosenstock", 
+"http://dbpedia.org/resource/Zambezi",
+"http://dbpedia.org/resource/Zambia",
+"http://dbpedia.org/resource/Zaman_Shah_Durrani"
+]
+indexes_not_in_database = [all_entities.index(uri) for uri in not_in_database]
+
+entities_mapping_in_sample = [el for el in entities_mapping][:373]
+
+
+Y_true = [str.lower(i[1]) for i in entities_mapping][:373]
+Y_pred_ = Y_true
+for index in indexes:
+    Y_pred_[index] = ''
+Y_true = [str.lower(i[1]) for i in entities_mapping][:373]    
+for index_not_in_database in sorted(indexes_not_in_database, reverse=True):
+    del Y_true[index_not_in_database]
+    del Y_pred_[index_not_in_database]
+Y_true = Y_true[:len(Y_pred_)]
+
+
+
+
+
+
+# Errors
+file_number = 1
+file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'r', encoding='utf-8')
+lines = file.readlines()
+indexes_errors = [int(re.sub(r'[^0-9]+', '', line)) for line in lines if 'i:' in line]
+entities_mapping_errors =  [entities_mapping[index_error] for index_error in indexes_errors]
+
+
+# Sample
+log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'r+', encoding='utf-8')
+lines = log_file.readlines()[2:]
+indexes_in_database = [int(line.split('|')[0][6:]) for line in lines if 'Empty|Not present at database' not in line]
+entities_mapping_in_sample = [entities_mapping[index] for index in indexes_in_database]
+
+(self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s').distinct()).count()
+
+ns = range(1,9)
+for n in ns:
+    if n == len(ns):        
+        total = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        errors = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        print(f'Total with {n} literals: {total}. Errors: {errors}. Acurracy: {(total-errors)/total}.')
+    else:
+        total = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s', 'o').groupBy('s').count().filter(col('count') == n).count()
+        errors = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s', 'o').groupBy('s').count().filter(col('count') == n).count()
+        print(f'Total with {n} literals: {total}. Errors: {errors}. Acurracy: {(total - errors) / total}.')  
+        
+        
+        
+        
+        
+ns = range(1,9)
+for n in ns:
+    if n == len(ns):        
+        l1 = [row.asDict()['s'] for row in self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().filter(col('count') >= n).select('s').collect()]
+        total = len([x for x in [el[1] for el in entities_mapping_in_sample] if x in l1])
+        #total = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        l1 = [row.asDict()['s'] for row in self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().filter(col('count') >= n).select('s').collect()]
+        errors = len([x for x in [el[1] for el in entities_mapping_errors] if x in l1])
+        #errors = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        print(f'Total with {n} literals: {total}. Errors: {errors}. Acurracy: {(total-errors)/total}.')
+    else:
+        l1 = [row.asDict()['s'] for row in self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().filter(col('count') == n).select('s').collect()]
+        total = len([x for x in [el[1] for el in entities_mapping_in_sample] if x in l1])
+        #total = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        l1 = [row.asDict()['s'] for row in self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().filter(col('count') == n).select('s').collect()]
+        errors = len([x for x in [el[1] for el in entities_mapping_errors] if x in l1])
+        #errors = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().filter(col('count') >= n).count()
+        print(f'Total with {n} literals: {total}. Errors: {errors}. Acurracy: {(total-errors)/total}.')
+        
+   
+
+
+
+
+
+df = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping])).select('s','o').groupBy('s').count().orderBy(col('count').desc())
+
+
+df = self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().orderBy(col('count').desc())
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').orderBy(col('s')).show()
+
+
+# Exibe a lista de entidades cuja previsão foi errada
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).orderBy(col('s')).show(1000, truncate=50)
+
+# Conta o número de literais por entidade  cuja previsão foi errada
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().orderBy(col('count')).show(1000, truncate=60)
+
+
+# Quantidade média de literais por entidade cuja previsão foi errada
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().agg({'count':'mean'}).show(1000, truncate=60)
+
+
+
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping])).select('s','o').groupBy('s').count().describe().show(1000, truncate=60)
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_in_sample])).select('s','o').groupBy('s').count().describe().show(1000, truncate=60)
+self.spark_data.df_literals.filter(col('s').isin([el[1] for el in entities_mapping_errors])).select('s','o').groupBy('s').count().describe().show(1000, truncate=60)
+
+
+
+
+
+
+
+
+
+
+
+# Get log files
+file_number = 1
+log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'r+', encoding='utf-8')
+lines = log_file.readlines()[2:]
+lines_in_sample = []
+lines_with_errors = []
+lines_correct = []
+for line in lines:
+    line = line.replace('\n','')
+    if 'Empty|Not present at database' not in line:
+        lines_in_sample.append(line)
+        if 'Error' in line:
+            lines_with_errors.append(line)
+        else:
+            lines_correct.append(line)
+
+# Get all entities, corrected and predicted
+entities = set()
+for line in lines_in_sample:
+    splitted = line.split('|')
+    entities.add(splitted[1])
+    entities.add(splitted[2])
+
+# Count how many literals are in each entity
+rows = self.spark_data.df_literals.filter(col('s').isin([entity for entity in entities])).select('s','o').groupBy('s').count().collect()
+entities_dict = {row.asDict()['s']:row.asDict()['count']  for row in rows}
+
+# Build lists of corrected and predicted based on quantity of literals
+Y_true = []
+Y_pred = []
+for line in lines_with_errors:
+    splitted = line.split('|')
+    Y_true.append(entities_dict[splitted[1]])
+    Y_pred.append(entities_dict[splitted[2]])
+
+# Plot without colored
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import seaborn as sns
+
+cm = confusion_matrix(Y_true, Y_pred)
+labels = list(set([value for key, value in entities_dict.items()]))[:-2]
+sns.heatmap(cm, fmt='d', annot=True, square=False,
+            xticklabels=labels, yticklabels=labels,
+            cmap='gray_r', vmin=0, vmax=8,
+            linewidths=0.5, linecolor='k',
+            cbar=False)
+sns.despine(left=False, right=False, top=False, bottom=False)
+
+plt.title('Number of literals per entity')
+plt.ylabel('True entity by number of literals')
+plt.xlabel('Predicted entity by number of literals')
+plt.show()
+
+
+
+
+# Plot colored matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+cm = confusion_matrix(Y_true, Y_pred)
+cmd = ConfusionMatrixDisplay(cm, display_labels=list(set([value for key,value in entities_dict.items()])))
+cmd.plot()

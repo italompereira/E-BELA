@@ -109,23 +109,50 @@ class Evaluate:
         vectors = transformer.get_embedding([str.lower(self.preprocess_literal(i[0])) for i in entities_mapping]).tolist()
 
         Y_pred = []
+        Y_pred_disambiguated = []
         i = 0
+        number_instance_sample = 0
+
         indexes_not_in_database = []
-        file_number = 0
-        while os.path.exists(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt'):
-            file_number += 1
-        error_file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
-        error_file.write(f'{self.encoder.config_experiment}\n')
+        file_number = 1
+        if not os.path.exists(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt'):
+        # while os.path.exists(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt'):
+        #     file_number += 1
+            error_file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+            error_file.write(f'{self.encoder.config_experiment}\n')
 
-        result_file = open(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
-        result_file.write(f'{self.config_experiment}\n')
+            result_file = open(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+            result_file.write(f'{self.config_experiment}\n')
 
-        disambiguation_file = open(f'./EvaluateLogs/disambiguation_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
-        disambiguation_file.write(f'{self.config_experiment}\n')
+            disambiguation_file = open(f'./EvaluateLogs/disambiguation_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+            disambiguation_file.write(f'{self.config_experiment}\n')
 
-        log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
-        log_file.write(f'{self.config_experiment}\n')
-        log_file.write(f'Index|y_true|y_pred|Status\n')
+            log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'w', encoding='utf-8')
+            log_file.write(f'{self.config_experiment}\n')
+            log_file.write(f'Index|y_true|y_pred|Status\n')
+        else:
+            error_file = open(f'./EvaluateLogs/errors_{self.config_experiment}_{file_number}.txt', 'a+', encoding='utf-8')
+            result_file = open(f'./EvaluateLogs/results_{self.config_experiment}_{file_number}.txt', 'a+', encoding='utf-8')
+            disambiguation_file = open(f'./EvaluateLogs/disambiguation_{self.config_experiment}_{file_number}.txt', 'a+', encoding='utf-8')
+            log_file = open(f'./EvaluateLogs/log_{self.config_experiment}_{file_number}.txt', 'r+', encoding='utf-8')
+
+            lines = log_file.readlines()[2:]
+            indexes_not_in_database = [int(line.split('|')[0][6:]) for line in lines if 'Empty|Not present at database' in line]
+            number_of_not_in_database = len(indexes_not_in_database)
+            number_of_indexes = int(lines[-1].split('|')[0][6:])+1
+            i = number_of_indexes
+            number_instance_sample = number_of_indexes - number_of_not_in_database
+
+            indexes_disambiguated = [int(line.split('|')[0][6:]) for line in lines if 'Disambiguated' in line]
+            Y_pred = [line.split('|')[2].replace('\n', '') for line in lines]
+            Y_pred_disambiguated = [line.split('|')[2].replace('\n', '') for line in lines]
+            for index_disambiguated in indexes_disambiguated:
+                Y_pred_disambiguated[index_disambiguated] = lines[index_disambiguated].split('|')[1].replace('\n', '')
+
+            for index_not_in_database in sorted(indexes_not_in_database, reverse=True):
+                del Y_pred[index_not_in_database]
+                del Y_pred_disambiguated[index_not_in_database]
+
 
         nlp = spacy.load("en_core_web_sm")
         last_mention = ''
@@ -133,8 +160,8 @@ class Evaluate:
             max_seq_length = self.encoder.transformer.embedding_model.max_seq_length
         else:
             max_seq_length = None
-        sample_size = 364
-        number_instance_sample = 0
+
+        sample_size = 370
         while number_instance_sample < len(vectors[:sample_size]):
             print(str(i) + " vectors processed of " + str(sample_size))  # , end=".\t")
             try:
@@ -201,8 +228,10 @@ class Evaluate:
 
                 if len(repeated_distances) > 0:
                     Y_pred.append(candidates[indexes[0]][0])
+                    Y_pred_disambiguated.append(candidates[indexes[0]][0])
                 else:
                     Y_pred.append(candidates[indexes[0]][0])
+                    Y_pred_disambiguated.append(candidates[indexes[0]][0])
                 #Y_pred.append(self.get_similars_to(candidates, 10))
                 # print if y_pred different to y_true
 
@@ -219,7 +248,7 @@ class Evaluate:
                     if str.lower(Y_pred[-1]) in rows:
                         log_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Disambiguated\n')
                         disambiguation_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Disambiguated\n')
-                        Y_pred[-1] = y_true
+                        Y_pred_disambiguated[-1] = y_true
                         i += 1
                         number_instance_sample += 1
                         continue
@@ -244,7 +273,7 @@ class Evaluate:
                 time.sleep(5)
                 continue
 
-            log_file.write(f'Index:{i}| y_true: {y_true}, y_pred: {Y_pred[-1]}\n')
+            log_file.write(f'Index:{i}|{y_true}|{Y_pred[-1]}|Correct\n')
             i += 1
             number_instance_sample += 1
 
@@ -256,6 +285,7 @@ class Evaluate:
         # results_file.write(f'{self.config_experiment}\n')
 
         Y_pred_ = list(map(str.lower, Y_pred))[:i]
+        Y_pred_disambiguated_ = list(map(str.lower, Y_pred_disambiguated))[:i]
         #Y_true = list(map(str.lower, [item['uri'] for i in range(len(ground_truth)) for item in ground_truth[i]['entity mapping']]))
         Y_true = [str.lower(i[1]) for i in entities_mapping]
         for index_not_in_database in sorted(indexes_not_in_database, reverse=True):
@@ -263,6 +293,8 @@ class Evaluate:
         Y_true = Y_true[:len(Y_pred_)]
 
         result = f'Evaluate {i} instances.\n\n'
+
+        result += 'Not Disambiguated: \n'
 
         result += 'Accuracy: \n'
         result += f"Accuracy: {accuracy_score(Y_true, Y_pred_)}\n"
@@ -278,6 +310,23 @@ class Evaluate:
         result += 'F1: \n'
         result += f"Macro F1: {f1_score(Y_true, Y_pred_, average='macro')}\n"
         result += f"Micro F1:  {f1_score(Y_true, Y_pred_, average='micro')}\n"
+
+        result += 'Disambiguated: \n'
+
+        result += 'Accuracy: \n'
+        result += f"Accuracy: {accuracy_score(Y_true, Y_pred_disambiguated_)}\n"
+
+        result += 'Precision: \n'
+        result += f"Macro precision: {precision_score(Y_true, Y_pred_disambiguated_, average='macro')}\n"
+        result += f"Micro precision:  {precision_score(Y_true, Y_pred_disambiguated_, average='micro')}\n"
+
+        result += 'Recall: \n'
+        result += f"Macro recall: {recall_score(Y_true, Y_pred_disambiguated_, average='macro')}\n"
+        result += f"Micro recall:  {recall_score(Y_true, Y_pred_disambiguated_, average='micro')}\n"
+
+        result += 'F1: \n'
+        result += f"Macro F1: {f1_score(Y_true, Y_pred_disambiguated_, average='macro')}\n"
+        result += f"Micro F1:  {f1_score(Y_true, Y_pred_disambiguated_, average='micro')}\n"
 
         result += f'Entities not present in database: {len(indexes_not_in_database)}\n'
         for index in indexes_not_in_database:
