@@ -1,0 +1,776 @@
+[
+ {
+  "question": "Are there any castles in the United States?",
+  "id": "2",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> ask where {?uri dct:subject dbc:Castles_in_the_United_States}",
+  "sparql_query": "ask where {?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Castles_in_the_United_States>}",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Can you find frescoes in Crete?",
+  "id": "3",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> PREFIX dbp: <http://dbpedia.org/property/> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> ask where { ?uri dct:subject dbc:s . ?uri dbp:museum ?museum . ?museum dbo:location dbr:Crete . }",
+  "sparql_query": "ask where { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:s> . ?uri <http://dbpedia.org/property/museum> ?museum . ?museum <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Crete> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Do Urdu and Persian have a common root?",
+  "id": "4",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> ask where { dbr:Urdu dbo:languageFamily ?uri . dbr:Persian_language dbo:languageFamily ?uri . }",
+  "sparql_query": "ask where { <http://dbpedia.org/resource/Urdu> <http://dbpedia.org/ontology/languageFamily> ?uri . <http://dbpedia.org/resource/Persian_language> <http://dbpedia.org/ontology/languageFamily> ?uri . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Does the Ford Motor Company have a manufacturing plant in Malaysia?",
+  "id": "5",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> ask where { ?uri dbo:assembly dbr:Malaysia . ?uri dbo:manufacturer dbr:Ford_Motor_Company . }",
+  "sparql_query": "ask where { ?uri <http://dbpedia.org/ontology/assembly> <http://dbpedia.org/resource/Malaysia> . ?uri <http://dbpedia.org/ontology/manufacturer> <http://dbpedia.org/resource/Ford_Motor_Company> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How many years was the Ford Model T manufactured?",
+  "id": "6",
+  "sparql_query_o": "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> SELECT (year(xsd:date(?end))-year(xsd:date(?start)) AS ?years) WHERE { res:Ford_Model_T dbo:productionEndYear ?end. res:Ford_Model_T dbo:productionStartYear ?start. }",
+  "sparql_query": "SELECT (year(<http://www.w3.org/2001/XMLSchema#date>(?end))-year(<http://www.w3.org/2001/XMLSchema#date>(?start)) AS ?years) WHERE { <http://dbpedia.org/resource/Ford_Model_T> <http://dbpedia.org/ontology/productionEndYear> ?end. <http://dbpedia.org/resource/Ford_Model_T> <http://dbpedia.org/ontology/productionStartYear> ?start. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me all American presidents in the last 20 years.",
+  "id": "7",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> PREFIX dbp: <http://dbpedia.org/property/> select distinct ?uri where { ?uri rdf:type dbo:Person . ?uri dct:subject dbc:Presidents_of_the_United_States . ?uri dbp:termEnd ?termEnd . FILTER(year(NOW()) - year(?termEnd) <= 20) }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Person> . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Presidents_of_the_United_States> . ?uri <http://dbpedia.org/property/termEnd> ?termEnd . FILTER(year(NOW()) - year(?termEnd) <= 20) }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me all gangsters from the prohibition era.",
+  "id": "8",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { ?uri dbo:occupation dbr:Gangster . ?uri dct:subject dbc:Prohibition-era_gangsters . }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://dbpedia.org/ontology/occupation> <http://dbpedia.org/resource/Gangster> . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Prohibition-era_gangsters> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me all Seven Wonders of the Ancient World.",
+  "id": "9",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select ?uri where { ?uri dct:subject dbc:Seven_Wonders_of_the_Ancient_World }",
+  "sparql_query": "select ?uri where { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Seven_Wonders_of_the_Ancient_World> }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me all chemical elements.",
+  "id": "11",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX owl: <http://www.w3.org/2002/07/owl#> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { ?uri rdf:type owl:Thing . ?uri dct:subject dbc:Chemical_elements . }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Chemical_elements> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How many rivers and lakes are in South Carolina?",
+  "id": "13",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select (COUNT(distinct ?uri) as ?count) where { { ?uri dbo:location dbr:South_Carolina . ?uri rdf:type dbo:Lake . } UNION { ?uri dct:subject dbc:Rivers_and_streams_of_South_Carolina . } }",
+  "sparql_query": "select (COUNT(distinct ?uri) as ?count) where { { ?uri <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/South_Carolina> . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Lake> . } UNION { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Rivers_and_streams_of_South_Carolina> . } }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How many states are in Mexico?",
+  "id": "14",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> select (count(?uri) as ?count) where { ?uri dbo:type dbr:States_of_Mexico }",
+  "sparql_query": "select (count(?uri) as ?count) where { ?uri <http://dbpedia.org/ontology/type> <http://dbpedia.org/resource/States_of_Mexico> }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How many theories did Albert Einstein come up with?",
+  "id": "15",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select (count(?uri) as ?count) where { dbr:Albert_Einstein dbo:knownFor ?uri}",
+  "sparql_query": "select (count(?uri) as ?count) where { <http://dbpedia.org/resource/Albert_Einstein> <http://dbpedia.org/ontology/knownFor> ?uri}",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Is horse racing a sport?",
+  "id": "16",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> ask where { dbr:Horse_racing a dbo:Sport }",
+  "sparql_query": "ask where { <http://dbpedia.org/resource/Horse_racing> a <http://dbpedia.org/ontology/Sport> }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Is Pluto really a planet?",
+  "id": "17",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> ask where { dbr:Pluto a dbo:Planet }",
+  "sparql_query": "ask where { <http://dbpedia.org/resource/Pluto> a <http://dbpedia.org/ontology/Planet> }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Was Sigmund Freud married?",
+  "id": "18",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> ask where { dbr:Sigmund_Freud dbo:spouse ?uri }",
+  "sparql_query": "ask where { <http://dbpedia.org/resource/Sigmund_Freud> <http://dbpedia.org/ontology/spouse> ?uri }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What form of government is found in South Africa?",
+  "id": "19",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select ?uri where { dbr:South_Africa dbo:governmentType ?uri }",
+  "sparql_query": "select ?uri where { <http://dbpedia.org/resource/South_Africa> <http://dbpedia.org/ontology/governmentType> ?uri }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What is the largest state in the United States?",
+  "id": "22",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> select ?uri where { ?uri dct:subject dbc:States_of_the_United_States. ?uri rdf:type dbo:AdministrativeRegion. ?uri dbo:areaTotal ?area } ORDER BY DESC(?area) OFFSET 0 LIMIT 1",
+  "sparql_query": "select ?uri where { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:States_of_the_United_States>. ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/AdministrativeRegion>. ?uri <http://dbpedia.org/ontology/areaTotal> ?area } ORDER BY DESC(?area) OFFSET 0 LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What is the longest river in the world?",
+  "id": "23",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> select ?uri where { ?uri rdf:type dbo:BodyOfWater . ?uri dbo:length ?length } ORDER BY DESC(?length) LIMIT 1",
+  "sparql_query": "select ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/BodyOfWater> . ?uri <http://dbpedia.org/ontology/length> ?length } ORDER BY DESC(?length) LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Which building after the Burj Khalifa has the most floors?",
+  "id": "24",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> SELECT DISTINCT ?uri WHERE { res:Burj_Khalifa dbo:floorCount ?burj . ?uri rdf:type dbo:Building . ?uri dbo:floorCount ?proj . FILTER(?proj < ?burj) } ORDER BY DESC(?proj) LIMIT 1",
+  "sparql_query": "SELECT DISTINCT ?uri WHERE { <http://dbpedia.org/resource/Burj_Khalifa> <http://dbpedia.org/ontology/floorCount> ?burj . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Building> . ?uri <http://dbpedia.org/ontology/floorCount> ?proj . FILTER(?proj < ?burj) } ORDER BY DESC(?proj) LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What is the wavelength of indigo?",
+  "id": "25",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select ?n where { dbr:Indigo dbo:wavelength ?n }",
+  "sparql_query": "select ?n where { <http://dbpedia.org/resource/Indigo> <http://dbpedia.org/ontology/wavelength> ?n }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What was the name of the famous battle in 1836 in San Antonio?",
+  "id": "26",
+  "sparql_query_o": "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> select ?uri where { ?uri rdf:type dbo:MilitaryConflict. ?uri dbo:place dbr:San_Antonio. ?uri dbo:date ?date. FILTER ( ?date > '1835-12-31T00:00:00Z'^^xsd:dateTime). FILTER ( ?date <= '1836-12-31T00:00:00Z'^^xsd:dateTime) }",
+  "sparql_query": "select ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/MilitaryConflict>. ?uri <http://dbpedia.org/ontology/place> <http://dbpedia.org/resource/San_Antonio>. ?uri <http://dbpedia.org/ontology/date> ?date. FILTER ( ?date > '1835-12-31T00:00:00Z'^^<http://www.w3.org/2001/XMLSchema#dateTime>). FILTER ( ?date <= '1836-12-31T00:00:00Z'^^<http://www.w3.org/2001/XMLSchema#dateTime>) }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What were the names of the three ships used by Columbus?",
+  "id": "27",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select ?uri where { ?uri rdf:type dbo:Ship. ?uri dct:subject dbc:Christopher_Columbus. ?uri dct:subject dbc:Exploration_ships. }",
+  "sparql_query": "select ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Ship>. ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Christopher_Columbus>. ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Exploration_ships>. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What were the original 13 British colonies?",
+  "id": "28",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { ?uri dct:subject dbc:Former_British_colonies. ?uri dct:subject dbc:Thirteen_Colonies. }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Former_British_colonies>. ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Thirteen_Colonies>. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "When did Muhammad die?",
+  "id": "29",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?date where { res:Muhammad dbo:deathDate ?date. }",
+  "sparql_query": "select distinct ?date where { <http://dbpedia.org/resource/Muhammad> <http://dbpedia.org/ontology/deathDate> ?date. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "When was the De Beers company founded?",
+  "id": "30",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?date where { res:De_Beers dbo:foundingYear ?date. }",
+  "sparql_query": "select distinct ?date where { <http://dbpedia.org/resource/De_Beers> <http://dbpedia.org/ontology/foundingYear> ?date. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "When was John Adams born?",
+  "id": "31",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?date where { res:John_Adams dbo:birthDate ?date. }",
+  "sparql_query": "select distinct ?date where { <http://dbpedia.org/resource/John_Adams> <http://dbpedia.org/ontology/birthDate> ?date. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Which American presidents were in office during the Vietnam War?",
+  "id": "32",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { res:Vietnam_War dbo:commander ?uri . ?uri dct:subject dbc:Presidents_of_the_United_States . }",
+  "sparql_query": "select distinct ?uri where { <http://dbpedia.org/resource/Vietnam_War> <http://dbpedia.org/ontology/commander> ?uri . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Presidents_of_the_United_States> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Which city has the oldest running metro?",
+  "id": "33",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?loc where { ?uri dbo:type dbr:Rapid_transit . ?uri dbo:openingYear ?date . ?uri dbo:location ?loc . ?loc rdf:type dbo:City . } ORDER BY ASC(?date) LIMIT 1",
+  "sparql_query": "select ?loc where { ?uri <http://dbpedia.org/ontology/type> <http://dbpedia.org/resource/Rapid_transit> . ?uri <http://dbpedia.org/ontology/openingYear> ?date . ?uri <http://dbpedia.org/ontology/location> ?loc . ?loc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/City> . } ORDER BY ASC(?date) LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Which holidays are celebrated around the world?",
+  "id": "34",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?uri where { ?uri rdf:type dbo:Holiday. }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Holiday>. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who assassinated President McKinley?",
+  "id": "35",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/>  PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { ?uri rdf:type dbo:Person . ?uri dct:subject dbc:American_assassins . ?uri dct:subject dbc:Assassination_of_William_McKinley . }",
+  "sparql_query": " select distinct ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Person> . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:American_assassins> . ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Assassination_of_William_McKinley> . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who discovered Pluto?",
+  "id": "36",
+  "sparql_query_o": "PREFIX dbr: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select ?uri where { dbr:Pluto dbo:discoverer ?uri }",
+  "sparql_query": "select ?uri where { <http://dbpedia.org/resource/Pluto> <http://dbpedia.org/ontology/discoverer> ?uri }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who killed Caesar?",
+  "id": "37",
+  "sparql_query_o": "PREFIX dct: <http://purl.org/dc/terms/> PREFIX dbc: <http://dbpedia.org/resource/Category:> select distinct ?uri where { ?uri dct:subject dbc:Assassins_of_Julius_Caesar. }",
+  "sparql_query": "select distinct ?uri where { ?uri <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Assassins_of_Julius_Caesar>. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who was buried in the Great Pyramid of Giza?",
+  "id": "38",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> select ?uri where { ?uri dbo:restingPlace dbr:Great_Pyramid_of_Giza . } ",
+  "sparql_query": "select ?uri where { ?uri <http://dbpedia.org/ontology/restingPlace> <http://dbpedia.org/resource/Great_Pyramid_of_Giza> . } ",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who was the first King of England?",
+  "id": "39",
+  "sparql_query_o": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX yago: <http://dbpedia.org/class/yago/> select distinct ?uri where { ?uri rdf:type dbo:Royalty. ?uri rdf:type yago:WikicatEnglishMonarchs . ?uri dbo:activeYearsStartYear ?date . } ORDER BY ASC(?date) OFFSET 0 LIMIT 1",
+  "sparql_query": "select distinct ?uri where { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Royalty>. ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/class/yago/WikicatEnglishMonarchs> . ?uri <http://dbpedia.org/ontology/activeYearsStartYear> ?date . } ORDER BY ASC(?date) OFFSET 0 LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What was the final result of the War of the Roses?",
+  "id": "41",
+  "sparql_query_o": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dbr: <http://dbpedia.org/resource/> select distinct ?result where { ?uri dbo:isPartOfMilitaryConflict dbr:Wars_of_the_Roses. ?uri dbo:result ?result . ?uri dbo:date ?date } ORDER BY DESC(?date) OFFSET 0 LIMIT 1",
+  "sparql_query": "select distinct ?result where { ?uri <http://dbpedia.org/ontology/isPartOfMilitaryConflict> <http://dbpedia.org/resource/Wars_of_the_Roses>. ?uri <http://dbpedia.org/ontology/result> ?result . ?uri <http://dbpedia.org/ontology/date> ?date } ORDER BY DESC(?date) OFFSET 0 LIMIT 1",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Who writes the Farmers' Almanac?",
+  "id": "42",
+  "sparql_query_o": "PREFIX dbp: <http://dbpedia.org/property/> select ?uri where { <http://dbpedia.org/resource/Farmers'_Almanac> dbp:editor ?uri. }",
+  "sparql_query": "select ?uri where { <<http://dbpedia.org/resource/Farmers>'_Almanac> <http://dbpedia.org/property/editor> ?uri. }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How big is the earth's diameter?",
+  "id": "43",
+  "sparql_query_o": "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct (xsd:double(?radius)*2 AS ?diameter) where { res:Earth dbo:meanRadius ?radius . }",
+  "sparql_query": "select distinct (<http://www.w3.org/2001/XMLSchema#double>(?radius)*2 AS ?diameter) where { <http://dbpedia.org/resource/Earth> <http://dbpedia.org/ontology/meanRadius> ?radius . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "When did Paraguay proclaim its independence?",
+  "id": "44",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbp: <http://dbpedia.org/property/> select distinct ?date where { res:Paraguay dbp:establishedDate ?date . }",
+  "sparql_query": "select distinct ?date where { <http://dbpedia.org/resource/Paraguay> <http://dbpedia.org/property/establishedDate> ?date . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "How many people live in Eurasia?",
+  "id": "45",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?population where { res:Eurasia dbo:populationTotal ?population . }",
+  "sparql_query": "select distinct ?population where { <http://dbpedia.org/resource/Eurasia> <http://dbpedia.org/ontology/populationTotal> ?population . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me the runtime of Toy Story.",
+  "id": "47",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?runtime where { res:Toy_Story dbo:runtime ?runtime . }",
+  "sparql_query": "select distinct ?runtime where { <http://dbpedia.org/resource/Toy_Story> <http://dbpedia.org/ontology/runtime> ?runtime . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "What was the first name of the band Queens of the Stone Age?",
+  "id": "48",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?name where { res:Queens_of_the_Stone_Age dbo:alias ?name . }",
+  "sparql_query": "select distinct ?name where { <http://dbpedia.org/resource/Queens_of_the_Stone_Age> <http://dbpedia.org/ontology/alias> ?name . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Give me the birth place of Frank Sinatra.",
+  "id": "49",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?place where { res:Frank_Sinatra dbo:birthPlace ?place . }",
+  "sparql_query": "select distinct ?place where { <http://dbpedia.org/resource/Frank_Sinatra> <http://dbpedia.org/ontology/birthPlace> ?place . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ },
+ {
+  "question": "Which university did Angela Merkel attend?",
+  "id": "50",
+  "sparql_query_o": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbo: <http://dbpedia.org/ontology/> select distinct ?university where { res:Angela_Merkel dbo:almaMater ?university . }",
+  "sparql_query": "select distinct ?university where { <http://dbpedia.org/resource/Angela_Merkel> <http://dbpedia.org/ontology/almaMater> ?university . }",
+  "entity mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ],
+  "predicate mapping": [
+   {
+    "label": "",
+    "uri": ""
+   }
+  ]
+ }
+]
