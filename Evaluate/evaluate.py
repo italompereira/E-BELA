@@ -37,6 +37,9 @@ class Evaluate:
         'ace2004': './Datasets/ed_data/entity_disambiguation/ace2004.conll',
         'aquaint': './Datasets/ed_data/entity_disambiguation/aquaint.conll',
         'msnbc': './Datasets/ed_data/entity_disambiguation/msnbc.conll',
+        'qald-7': './Datasets/qald/qald-7-annotated.json',
+        'qald-8': './Datasets/qald/qald-8-annotated.json',
+        'qald-9': './Datasets/qald/qald-9-annotated.json',
     }
 
     def __init__(self, spark_data, encoder, data_base, context_with_mention_avg, dataset, config_experiment):
@@ -47,7 +50,7 @@ class Evaluate:
         self.config_experiment = config_experiment
         self.dataset = dataset
 
-        if self.dataset == 'lcquad':
+        if self.dataset in ['lcquad','qald-7']:
             self.ground_truth = self.load_lcquad_grounth_truth(Evaluate.PATHS[self.dataset])
         else:
             self.ground_truth = self.load_conll_grounth_truth(Evaluate.PATHS[self.dataset])
@@ -161,7 +164,7 @@ class Evaluate:
         else:
             max_seq_length = None
 
-        sample_size = 370
+        sample_size = 370 if len(vectors) > 370  else  len(vectors)
         while number_instance_sample < len(vectors[:sample_size]):
             print(str(i) + " vectors processed of " + str(sample_size))  # , end=".\t")
             try:
