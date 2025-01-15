@@ -190,12 +190,13 @@ class DataBase:
                                 LIMIT %s
                             ) as filter_table
                         ) as distinct_table ON distinct_table.sub = df.sub
+                        order by distance
                         """
 
                         cur.execute(sql, (vector, vector, k))
                         rows = cur.fetchall()
 
-                        # Check if the grount truth is present on results
+                        # Check if the ground truth is present on results
                         if not y_true in [row[0] for row in rows]:
                             with conn.cursor() as cur2:
                                 sql = f"""
@@ -221,7 +222,7 @@ class DataBase:
 
                                         cur3.execute(sql, (vector, vector))
                                         rows_ = cur3.fetchall()#[:k]
-                                        rows = list(set(sorted(rows_ + rows, key=lambda x: x[3]))) #[:k]
+                                        rows = sorted(list(set(rows_ + rows)), key=lambda x: x[4]) #[:k]
 
 
                         return rows #[(row[0], row[2]) for row in rows]
