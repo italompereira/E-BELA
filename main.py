@@ -79,19 +79,19 @@ if __name__ == "__main__":
         ],
         'weighted': [
             False,
-            True
+            #True
         ],
         'strategy': [
             'AVG',
             #'CONCAT'
         ],
         'top_n': [
-            [(2, 'GROUPED')],#, (2, 'SIMPLE')],
-            None
+            None,
+            #[(2, 'GROUPED'), (2, 'SIMPLE')]
         ],
         'context_with_mention_avg': [
             True,
-            False
+            #False
         ],
         'dataset': [
             'lcquad',
@@ -99,6 +99,9 @@ if __name__ == "__main__":
             #'ace2004',
             #'aquaint',
             #'msnbc',
+            'qald-7',
+            #'qald-8',
+            #'qald-9',
         ],
     }
 
